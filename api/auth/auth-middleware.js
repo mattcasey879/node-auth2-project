@@ -60,13 +60,13 @@ const checkUsernameExists = async (req, res, next) => {
       "message": "Invalid credentials"
     }
   */
- const { username } = req.body
- const user = await User.findBy({ username })
- if(user) {
-   next()
- } else {
-   next({status: 401, message:'Invalid credentials'})
- }
+  const { username } = req.body;
+  const user = await User.findBy({ username });
+  if (user) {
+    next();
+  } else {
+    next({ status: 401, message: "Invalid credentials" });
+  }
 };
 
 const validateRoleName = (req, res, next) => {
@@ -88,21 +88,19 @@ const validateRoleName = (req, res, next) => {
       "message": "Role name can not be longer than 32 chars"
     }
   */
- const { role_name } = req.body
-
-    if(role_name.trim() > 32) {
-      next({ status: 422, message: "Role name can not be longer than 32 chars"})
-    } else if(role_name.trim() === 'admin') {
-      next({ status: 422, message: "Role name cannot be admin"})
-    } 
-};  if(!role_name || role_name.trim() === '') {
-  req.role_name = 'student'
-  next()
-} else if(role_name) {
-  req.role_name = role_name
-  next()
-}
-
+  let role_name = req.body.role_name
+  if(role_name === undefined || role_name.trim() === '') {
+    req.body.role_name = 'student'
+    req.role_name = 'student'
+    next()
+  } else if(role_name.trim() === 'admin') {
+    next({ status: 422, message: "Role name cannot be admin"})
+  } else if(role_name > 32) {
+    next({ status: 422, message: "Role name cannot be longer that 32 chars"})
+  } else {
+    next()
+  }
+};
 module.exports = {
   restricted,
   checkUsernameExists,
