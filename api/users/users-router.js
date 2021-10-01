@@ -17,7 +17,7 @@ const { restricted, only } = require("../auth/auth-middleware.js");
     }
   ]
  */
-router.get("/", restricted, (req, res, next) => { // done for you
+router.get("/", (req, res, next) => { // done for you
   Users.find()
     .then(users => {
       res.json(users);
@@ -47,5 +47,14 @@ router.get("/:user_id", restricted, only('admin'), (req, res, next) => { // done
     })
     .catch(next);
 });
+
+router.post("/", (req, res, next) => {
+  const { username } = req.body
+  Users.findBy({ username })
+  .then(user => {
+    res.json(user);
+  })
+  .catch(next)
+})
 
 module.exports = router;
