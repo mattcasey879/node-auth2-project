@@ -20,6 +20,7 @@ router.post("/register", validateRoleName, (req, res, next) => {
   let user = req.body
   const hash = bcrypt.hashSync(user.password, 8)
   user.password = hash
+  user.role_name = req.role_name
   User.add(user)
   .then(data => {
     res.status(201).json(data)
@@ -31,7 +32,6 @@ router.post("/register", validateRoleName, (req, res, next) => {
 router.post("/login", checkUsernameExists, (req, res, next) => {
   let { username, password } = req.body
   const { user } = req
-  console.log(user)
   /**
     [POST] /api/auth/login { "username": "sue", "password": "1234" }
 
